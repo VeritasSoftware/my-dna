@@ -38,7 +38,7 @@ export class RobotPipettingService {
         }
 
         //MOVE
-        match = line.match(/^(\t|\s)*MOVE\s+([N,S,W,E]{1})\s*(\r\n)*$/i);
+        match = line.match(/^(\t|\s)*MOVE\s+([NSWE]{1})\s*(\r\n)*$/i);
 
         if (match) {
             return new Command(CommandType.MOVE, match[2]);
