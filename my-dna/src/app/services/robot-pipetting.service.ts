@@ -24,21 +24,21 @@ export class RobotPipettingService {
 
     parseLine(line: string) : Command {
         //PLACE
-        let match = line.match(/^(\t|\s)*PLACE\s+((\d)\,(\d))(\r\n)*$/i);
+        let match = line.match(/^(\t|\s)*PLACE\s+(\s*(\d)\s*\,\s*(\d)\s*)(\r\n)*$/i);
 
         if (match) {
             return new Command(CommandType.PLACE, match[2]);
         }
 
         //DROP
-        match = line.match(/^(\t|\s)*DROP(\r\n)*$/i);
+        match = line.match(/^(\t|\s)*DROP\s*(\r\n)*$/i);
 
         if (match) {
             return new Command(CommandType.DROP, "");
         }
 
         //MOVE
-        match = line.match(/^(\t|\s)*MOVE\s+(.{1})(\r\n)*$/i);
+        match = line.match(/^(\t|\s)*MOVE\s+(.{1})\s*(\r\n)*$/i);
 
         if (match) {
             return new Command(CommandType.MOVE, match[2]);
