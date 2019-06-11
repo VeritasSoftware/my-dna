@@ -29,6 +29,8 @@ export class HomeComponent implements OnInit {
   }
 
   setWellsPerSide() {
+    this.commands = '';
+    this.presentLocation = null;
     if (this.noSquaresInEachSide && +this.noSquaresInEachSide > 0) {
       this.noSquares = +this.noSquaresInEachSide * +this.noSquaresInEachSide; 
       this.bind();
