@@ -1,0 +1,26 @@
+<b>Enter Commands</b>
+<br />
+<textarea rows="7" cols="50" [(ngModel)]="commands"></textarea>
+<br />
+<input class="button button2" (click)="process()" type="button" value="Process" />
+<input class="button button2" (click)="sample()" type="button" value="Try sample" />
+<hr />
+<table>
+  <tr *ngFor="let wells of fakeArray;  let currentElementIndex=index">
+    <td *ngFor="let well of getWells(noSquaresInEachSide - currentElementIndex)">
+      <div [ngClass]="{'well present': presentLocation && ((well.x == presentLocation.x) && (well.y == presentLocation.y)), 'full': well.isFull,'well': !well.isFull}">
+        {{well.x}},{{well.y}}        
+        <div style="padding-left: 42px; padding-top: 21px;" *ngIf="well.isFull">X</div>
+      </div>      
+    </td>
+  </tr>
+</table>
+
+<b>Notes:</b>
+
+<ul>
+  <li>X is used to mark the well as FULL. Else EMPTY.</li>
+  <li>Maroon border well indicates the current position.</li>
+</ul>
+
+
