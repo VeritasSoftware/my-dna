@@ -1,10 +1,10 @@
 # My DNA coding test
 
-I have created a GUI application for the coding test.
+I have created a GUI web application for the coding test.
 
-## Web app built in Angular 7.
+## Web app built in Angular 7
 
-![Web App](https://github.com/VeritasSoftware/my-dna/my-dna/blob/master/src/Screenshot.jpg)
+![Web App](https://github.com/VeritasSoftware/my-dna/blob/master/my-dna/src/Screenshot.PNG)
 
 ## Web app deployed to Google cloud
 
