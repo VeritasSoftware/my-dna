@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { RobotPipettingService, CommandType, Location } from '../services/robot-pipetting.service';
 
+const DEFAULT_NO_OF_WELLS_PER_SIDE: string = "5";
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,9 +11,9 @@ import { RobotPipettingService, CommandType, Location } from '../services/robot-
 })
 export class HomeComponent implements OnInit {
 
-  noSquaresInEachSide: number = 5;
-  noSquares: number = this.noSquaresInEachSide * this.noSquaresInEachSide;
-  fakeArray = new Array(this.noSquaresInEachSide);
+  noSquaresInEachSide: string = DEFAULT_NO_OF_WELLS_PER_SIDE;
+  noSquares: number;
+  fakeArray: any[];
 
   plate: Array<Well> = new Array<Well>();
 
@@ -22,17 +24,30 @@ export class HomeComponent implements OnInit {
   constructor(private service: RobotPipettingService) { }
 
   ngOnInit() {
-    this.bind();
+    this.noSquaresInEachSide = DEFAULT_NO_OF_WELLS_PER_SIDE;
+    this.setWellsPerSide();
+  }
+
+  setWellsPerSide() {
+    if (this.noSquaresInEachSide && +this.noSquaresInEachSide > 0) {
+      this.noSquares = +this.noSquaresInEachSide * +this.noSquaresInEachSide; 
+      this.bind();
+    }        
+    else {
+      this.noSquaresInEachSide = "";
+    }
   }
 
   bind() {
     this.plate = new Array<Well>();
 
-    for(let i=0; i < this.noSquaresInEachSide; i++) {
-      for(let j=0; j < this.noSquaresInEachSide; j++) {
+    for(let i=0; i < +this.noSquaresInEachSide; i++) {
+      for(let j=0; j < +this.noSquaresInEachSide; j++) {
         this.plate.push(new Well(i, j, false));
       }  
     }
+
+    this.fakeArray = new Array(+this.noSquaresInEachSide);
   }
 
   sample() {
@@ -51,7 +66,6 @@ MOVE E`;
     }    
     this.presentLocation = null;
     this.bind();
-    this.fakeArray = new Array(this.noSquaresInEachSide);
   }
 
   process() {    
@@ -67,7 +81,7 @@ MOVE E`;
           case CommandType.PLACE:
             let location = this.service.parsePlaceArgs(cmd.arguments);
   
-            if (location && this.isInBounds(location.x, location.y, this.noSquaresInEachSide)) {
+            if (location && this.isInBounds(location.x, location.y, +this.noSquaresInEachSide)) {
               this.presentLocation = location;
               isPlaced = true;
             }
@@ -83,7 +97,7 @@ MOVE E`;
             if (isPlaced) {
               let locationAfterMove = this.service.parseMoveArg(this.presentLocation, cmd.arguments);
   
-              if (locationAfterMove && this.isInBounds(locationAfterMove.x, locationAfterMove.y, this.noSquaresInEachSide)) {
+              if (locationAfterMove && this.isInBounds(locationAfterMove.x, locationAfterMove.y, +this.noSquaresInEachSide)) {
                 this.presentLocation = locationAfterMove;
               }
             }            
@@ -109,7 +123,7 @@ MOVE E`;
   }
 
   isInBounds(x: number, y: number, noOfWellsPerSide: number) : boolean {
-    return (x >= 0 && x < noOfWellsPerSide - 1) && (y >= 0 && y < noOfWellsPerSide - 1);
+    return (x >= 0 && x < noOfWellsPerSide) && (y >= 0 && y < noOfWellsPerSide);
   }
 }
 
