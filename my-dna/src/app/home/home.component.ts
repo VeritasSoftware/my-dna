@@ -22,6 +22,12 @@ export class HomeComponent implements OnInit {
   constructor(private service: RobotPipettingService) { }
 
   ngOnInit() {
+    this.bind();
+  }
+
+  bind() {
+    this.plate = new Array<Well>();
+
     for(let i=0; i < this.noSquaresInEachSide; i++) {
       for(let j=0; j < this.noSquaresInEachSide; j++) {
         this.plate.push(new Well(i, j, false));
@@ -39,8 +45,21 @@ MOVE E`;
     this.process();
   }
 
-  process() {
+  clear(clearCommands: boolean = true) {
+    if (clearCommands) {
+      this.commands = '';
+    }    
+    this.presentLocation = null;
+    this.bind();
+    this.fakeArray = new Array(this.noSquaresInEachSide);
+  }
+
+  process() {    
+    this.clear(false);
+
     let cmd = this.service.parseCommands(this.commands);
+
+    let isPlaced: boolean = false;
 
     cmd.forEach(cmd => {
       if (cmd) {
@@ -48,21 +67,26 @@ MOVE E`;
           case CommandType.PLACE:
             let location = this.service.parsePlaceArgs(cmd.arguments);
   
-            if (location) {
+            if (location && this.isInBounds(location.x, location.y, this.noSquaresInEachSide)) {
               this.presentLocation = location;
+              isPlaced = true;
             }
             break;
           case CommandType.DROP:
-            let well = this.getWell(this.presentLocation.x, this.presentLocation.y);
+            if (isPlaced) {
+              let well = this.getWell(this.presentLocation.x, this.presentLocation.y);
   
-            well.isFull = true;
+              well.isFull = true;
+            }            
             break;
           case CommandType.MOVE:
-            let locationAfterMove = this.service.parseMoveArg(this.presentLocation, cmd.arguments);
+            if (isPlaced) {
+              let locationAfterMove = this.service.parseMoveArg(this.presentLocation, cmd.arguments);
   
-            if (locationAfterMove) {
-              this.presentLocation = locationAfterMove;
-            }
+              if (locationAfterMove && this.isInBounds(locationAfterMove.x, locationAfterMove.y, this.noSquaresInEachSide)) {
+                this.presentLocation = locationAfterMove;
+              }
+            }            
             break;                      
           default:
             break;          
@@ -84,6 +108,9 @@ MOVE E`;
     return null;
   }
 
+  isInBounds(x: number, y: number, noOfWellsPerSide: number) : boolean {
+    return (x >= 0 && x < noOfWellsPerSide - 1) && (y >= 0 && y < noOfWellsPerSide - 1);
+  }
 }
 
 export class Well {
