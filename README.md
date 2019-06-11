@@ -6,6 +6,11 @@ I have created a GUI web application for the coding test.
 
 ![Web App](https://github.com/VeritasSoftware/my-dna/blob/master/my-dna/src/Screenshot.PNG)
 
+### The app consists of
+
+*   A **RobotPipettingService** Service which parses the Commands text using **regular expressions**.
+*   A **Home** component for the UI. The Service is injected into this component.
+
 ## Web app deployed to Google cloud
 
 [**Online app - Give it a try!**](https://my-dna-coding-test.firebaseapp.com)
