@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { RobotPipettingService, CommandType, Location } from '../services/robot-pipetting.service';
+import { RobotPipettingService } from '../services/robot-pipetting.service';
+import { Well, CommandType, Location } from '../models/models';
 
 const DEFAULT_NO_OF_WELLS_PER_SIDE: string = "5";
 
@@ -74,6 +75,12 @@ MOVE E`;
   process() {    
     this.clear(false);
 
+    //if no commands, return
+    if (!this.commands && this.commands.match(/^\s*$/) != null) {
+      return;
+    }
+
+    //process commands
     let cmd = this.service.parseCommands(this.commands);
 
     let isPlaced: boolean = false;
@@ -127,18 +134,5 @@ MOVE E`;
 
   isInBounds(x: number, y: number, noOfWellsPerSide: number) : boolean {
     return (x >= 0 && x < noOfWellsPerSide) && (y >= 0 && y < noOfWellsPerSide);
-  }
-}
-
-export class Well {
-  x: number;
-  y: number;
-
-  isFull: boolean = false;
-
-  constructor(x: number, y: number, isFull: boolean) {
-    this.x = x;
-    this.y = y;
-    this.isFull = isFull;
   }
 }

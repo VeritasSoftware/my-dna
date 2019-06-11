@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Movement, Location, Command, CommandType } from '../models/models';
 
 [Injectable]
 export class RobotPipettingService {
@@ -6,8 +7,10 @@ export class RobotPipettingService {
     parseCommands(commands: string) : Array<Command> {
         let temp = new Array<Command>();
 
+        //get command lines
         let lines = commands.match(/^.+$/gm);
 
+        //parse each command line
         for (let i=0; i<lines.length; i++) {
             let command = this.parseLine(lines[i]);
 
@@ -20,18 +23,21 @@ export class RobotPipettingService {
     }
 
     parseLine(line: string) : Command {
+        //PLACE
         let match = line.match(/^(\t|\s)*PLACE\s+((\d)\,(\d))(\r\n)*$/i);
 
         if (match) {
             return new Command(CommandType.PLACE, match[2]);
         }
 
+        //DROP
         match = line.match(/^(\t|\s)*DROP(\r\n)*$/i);
 
         if (match) {
             return new Command(CommandType.DROP, "");
         }
 
+        //MOVE
         match = line.match(/^(\t|\s)*MOVE\s+(.{1})(\r\n)*$/i);
 
         if (match) {
@@ -42,7 +48,7 @@ export class RobotPipettingService {
     }
 
     parsePlaceArgs(args: string) : Location {
-        let coords = args.match(/^(\d)\,(\d)$/);
+        let coords = args.match(/^\s*(\d)\s*\,\s*(\d)\s*$/);
 
         if (coords) {
             return new Location(+coords[1], +coords[2])
@@ -66,39 +72,4 @@ export class RobotPipettingService {
                 return null;
         }
     }
-}
-
-export class Command {
-    name: CommandType;
-    arguments : string;
-
-    constructor(name: CommandType, args: string) {
-        this.name = name;
-        this.arguments = args;
-    }
-}
-
-export enum CommandType {
-    PLACE,
-    DETECT,
-    DROP,
-    MOVE,
-    REPORT
-}
-
-export class Location {
-    x: number;
-    y: number;
-
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
-export enum Movement {
-    N,
-    S,
-    E,
-    W
 }
