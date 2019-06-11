@@ -11,6 +11,14 @@ I have created a GUI web application for the coding test.
 *   A **RobotPipettingService** Service which parses the Commands text using **regular expressions**.
 *   A **Home** component for the UI. The Service is injected into this component.
 
+### The Commands supported are
+
+*   PLACE
+*   DROP
+*   MOVE
+
+Since this is a GUI solution, we do not need DETECT, REPORT.
+
 ## Web app deployed to Google cloud
 
 [**Online app - Give it a try!**](https://my-dna-coding-test.firebaseapp.com)
