@@ -29,11 +29,11 @@ export class HomeComponent implements OnInit {
   }
 
   setWellsPerSide() {
-    this.commands = '';
-    this.presentLocation = null;
     if (this.noSquaresInEachSide && +this.noSquaresInEachSide > 0) {
       this.noSquares = +this.noSquaresInEachSide * +this.noSquaresInEachSide; 
       this.bind();
+      this.commands = '';
+      this.presentLocation = null;
     }        
     else {
       this.noSquaresInEachSide = "";
@@ -53,12 +53,13 @@ export class HomeComponent implements OnInit {
   }
 
   sample() {
+    this.noSquaresInEachSide = "5";
+    this.setWellsPerSide();
     this.commands = `PLACE 2,2
 DROP
 MOVE N
 DROP
 MOVE E`;
-
     this.process();
   }
 
